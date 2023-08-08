@@ -1,0 +1,27 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block page_content %}
+
+<div class="section">
+    <div class="container text-center">
+        <div class="row mb-5">
+            <h2 class="heading text-primary">Details:</h2>
+            <div class="col-lg-5 mx-auto text-center" data-aos="fade-up">
+                <form method="POST" action="{% url 'profile edit' request.user.pk %}">
+                    <div class="row align-items-center">
+                        <div class="col-4"></div>
+                        <div class="col-6">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <div class="col-mb-6">
+                                <input type="submit" value="Confirm" class="btn btn-primary">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

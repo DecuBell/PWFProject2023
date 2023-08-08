@@ -1,0 +1,55 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block page_content %}
+
+
+    <!-- Start posts-entry -->
+    <section class="section posts-entry">
+        <div class="container">
+            <div class="row mb-4">
+                <div class="col-sm-6">
+                    <h2 class="posts-entry-title">Latest news:</h2>
+                    {{ request.user }}
+                </div>
+
+                <div class="col-sm-6 text-sm-end"><a href="{% static 'category.html' %}" class="read-more">View All</a>
+                </div>
+            </div>
+            <div class="row g-3">
+                <div class="col-md-9">
+                    <div class="row g-3">
+                        {% for article in last_two_articles %}
+                        <div class="col-md-6">
+                            <div class="blog-entry">
+                                <a href="{% url 'article details' article.pk %}" class="img-link">
+                                    <img src="{% static article.header_image %}" alt="Image" class="img-fluid">
+                                </a>
+                                <span class="date">{{ article.publish_date }}</span>
+                                <h2><a href="{% url 'article details' article.pk %}">{{ article.title }}</a></h2>
+                                <p>{{ article.body | truncatechars:150 }}</p>
+                                <p><a href="{% url 'article details' article.pk %}" class="btn btn-sm btn-outline-primary">Read
+                                    More</a></p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <ul class="list-unstyled blog-entry-sm">
+                        {% for article in next_three_articles %}
+                        <li>
+                            <span class="date">{{ article.publish_date }}</span>
+                            <h3><a href="{% url 'article details' article.pk %}">{{ article.title}}</a></h3>
+                            <p>{{ article.body | truncatechars:70 }}</p>
+                            <p><a href="{% url 'article details' article.pk %}" class="read-more">Continue Reading</a></p>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End posts-entry -->
+
+{% endblock %}

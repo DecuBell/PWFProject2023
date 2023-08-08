@@ -1,0 +1,47 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block page_content %}
+
+    <div class="section">
+        <div class="container text-center">
+            <div class="row mb-5">
+                <h2 class="heading text-primary">Details:</h2>
+                <div class="col-lg-5 mx-auto text-center" data-aos="fade-up">
+                    <!-- Profile Picture -->
+                    <img src="{{ object.profile_picture }}" alt="Profile Picture"
+                         class="img-thumbnail img-fluid rounded-circle" style="width: 50%; height: 50%;">
+                    <!-- First Name and Last Name -->
+                    {% if not object.first_name and not object.last_name %}
+                        <h1>No name</h1>
+                    {% else %}
+                        <h1>{{ object.first_name }} {{ object.last_name }}</h1>
+                    {% endif %}
+                    <!-- Creation date -->
+                    <p>Date created: {{ object.creation_date }}</p>
+                    <!-- Email -->
+                    <p>Email: {{ object.email }}</p>
+                    {% if object.profile_description %}
+                        <!-- Profile Description -->
+                        <p>About: {{ object.profile_description }}</p>
+                    {% endif %}
+                    <!-- Articles -->
+                    <h3>Articles</h3>
+                    <ul class="list-group">
+                        {% for article in articles %}
+                            <li class="list-group-item">{{ article.title }}</li>
+                        {% endfor %}
+                    {% if request.user.pk == object.user.pk %}
+                        <div class="col-lg-5 mx-auto text-center" data-aos="fade-up"><p>
+                            <a href="{% url 'profile edit' object.user.pk %}" class="btn btn-sm btn-outline-primary">Edit
+                            profile</a></p>
+                            <p><a href="{% url 'profile delete' object.user.pk %}" class="btn btn-sm btn-outline-primary">Delete
+                            profile</a></p>
+                        </div>
+                    {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

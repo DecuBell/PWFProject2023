@@ -1,0 +1,135 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block page_content %}
+
+    <div class="section search-result-wrap">
+        <div class="container">
+
+            <div class="row posts-entry">
+                <div class="col-lg-8">
+                    {% for article in object_list %}
+                        <div class="blog-entry d-flex blog-entry-search-item">
+                            <a href="{% url 'article details' article.pk %}" class="img-link me-4">
+                                <img src="{% static '' %}{{ article.header_image }}" alt="Image" class="img-thumbnail">
+                            </a>
+                            <div>
+                                <span class="date">{{ article.publish_date }} &bullet; <a
+                                        href="#">{{ article.category }}</a></span>
+                                <h2><a href="{% url 'article details' article.pk %}">{{ article.title }}</a></h2>
+                                <p>{{ article.body | truncatechars:100 }}</p>
+                                <p><a href="{% url 'article details' article.pk %}"
+                                      class="btn btn-sm btn-outline-primary">Read More</a>
+                                    {% if request.user.pk == article.user.pk or is_editor %}<a
+                                        href="{% url 'article edit' article.pk %}"
+                                        class="btn btn-sm btn-outline-primary">Edit</a><a
+                                        href="{% url 'article delete' article.pk %}"
+                                        class="btn btn-sm btn-outline-primary">Delete</a>
+                                    {% endif %}
+                                </p>
+                            {{ request.user.pk }} {{ article.user.pk }}
+                            </div>
+                        </div>
+
+                    {% endfor %}
+
+                    <div class="col-md-12" bis_skin_checked="1">
+                        <div class="custom-pagination" bis_skin_checked="1">
+                            {% if page_obj.has_previous %}
+                                <a href="?page=1">1</a>
+                                {#                      <a href="?page={{ page_obj.previous_page_number }}">previous</a>#}
+                            {% endif %}
+                               <span class="current">{{ page_obj.number }}</span>
+                            {% if page_obj.has_next %}
+                                <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.number|add:"1" }}</a>
+
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {#                    <div class="col-lg-4 sidebar">#}
+                    {##}
+                    {#                        <div class="sidebar-box search-form-wrap mb-4">#}
+                    {#                            <form action="#" class="sidebar-search-form">#}
+                    {#                                <span class="bi-search"></span>#}
+                    {#                                <input type="text" class="form-control" id="s"#}
+                    {#                                       placeholder="Type a keyword and hit enter">#}
+                    {#                            </form>#}
+                    {#                        </div>#}
+                    {#                        <!-- END sidebar-box -->#}
+                    {#                        <div class="sidebar-box">#}
+                    {#                            <h3 class="heading">Popular Posts</h3>#}
+                    {#                            <div class="post-entry-sidebar">#}
+                    {#                                <ul>#}
+                    {#                                    <li>#}
+                    {#                                        <a href="">#}
+                    {#                                            <img src="images/img_1_sq.jpg" alt="Image placeholder" class="me-4 rounded">#}
+                    {#                                            <div class="text">#}
+                    {#                                                <h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>#}
+                    {#                                                <div class="post-meta">#}
+                    {#                                                    <span class="mr-2">March 15, 2018 </span>#}
+                    {#                                                </div>#}
+                    {#                                            </div>#}
+                    {#                                        </a>#}
+                    {#                                    </li>#}
+                    {#                                    <li>#}
+                    {#                                        <a href="">#}
+                    {#                                            <img src="images/img_2_sq.jpg" alt="Image placeholder" class="me-4 rounded">#}
+                    {#                                            <div class="text">#}
+                    {#                                                <h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>#}
+                    {#                                                <div class="post-meta">#}
+                    {#                                                    <span class="mr-2">March 15, 2018 </span>#}
+                    {#                                                </div>#}
+                    {#                                            </div>#}
+                    {#                                        </a>#}
+                    {#                                    </li>#}
+                    {#                                    <li>#}
+                    {#                                        <a href="">#}
+                    {#                                            <img src="images/img_3_sq.jpg" alt="Image placeholder" class="me-4 rounded">#}
+                    {#                                            <div class="text">#}
+                    {#                                                <h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>#}
+                    {#                                                <div class="post-meta">#}
+                    {#                                                    <span class="mr-2">March 15, 2018 </span>#}
+                    {#                                                </div>#}
+                    {#                                            </div>#}
+                    {#                                        </a>#}
+                    {#                                    </li>#}
+                    {#                                </ul>#}
+                    {#                            </div>#}
+                    {#                        </div>#}
+                    {#                        <!-- END sidebar-box -->#}
+
+                    <div class="sidebar-box">
+                        <h3 class="heading">Articles count:</h3>
+                        <ul class="categories">
+                            {% for cat in object.categories %}
+                                <li><a href="#">{{ cat }} <span>(12)</span></a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <!-- END sidebar-box -->
+
+                    {#                        <div class="sidebar-box">#}
+                    {#                            <h3 class="heading">Tags</h3>#}
+                    {#                            <ul class="tags">#}
+                    {#                                <li><a href="#">Travel</a></li>#}
+                    {#                                <li><a href="#">Adventure</a></li>#}
+                    {#                                <li><a href="#">Food</a></li>#}
+                    {#                                <li><a href="#">Lifestyle</a></li>#}
+                    {#                                <li><a href="#">Business</a></li>#}
+                    {#                                <li><a href="#">Freelancing</a></li>#}
+                    {#                                <li><a href="#">Travel</a></li>#}
+                    {#                                <li><a href="#">Adventure</a></li>#}
+                    {#                                <li><a href="#">Food</a></li>#}
+                    {#                                <li><a href="#">Lifestyle</a></li>#}
+                    {#                                <li><a href="#">Business</a></li>#}
+                    {#                                <li><a href="#">Freelancing</a></li>#}
+                    {#                            </ul>#}
+                    {#                        </div>#}
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}

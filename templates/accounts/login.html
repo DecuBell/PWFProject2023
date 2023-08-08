@@ -1,0 +1,26 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block page_content %}
+
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-md-offset-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="col-mb-6" data-aos="fade-up" data-aos-delay="200">
+                    <form method="POST" action="{% url 'login user' %}">
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <div class="col-mb-6">
+                                    <input type="submit" value="Login" class="btn btn-primary">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
