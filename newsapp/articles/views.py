@@ -5,7 +5,8 @@ from django.urls import reverse_lazy, reverse
 from django.views import generic as views
 from newsapp.articles.forms import CreateArticleForm, ArticleDeleteForm
 from newsapp.articles.models import Article
-
+from newsapp.comments.forms import CommentForm
+from newsapp.comments.models import Comment
 
 UserModel = get_user_model()
 
@@ -55,11 +56,20 @@ class ArticlesView(views.ListView):
 class SingleArticleView(views.DetailView):
     model = Article
     template_name = 'articles/single_article.html'
+    context_object_name = 'article'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['is_author'] = self.object.user == self.request.user
         context['article_author'] = self.object.user.profile.full_name
+        article = self.object
+        comments = Comment.objects.filter(article=article)
+        comment_form = CommentForm()
+
+        context['comments'] = comments
+        context['comment_form'] = comment_form
+        # context['article'] = self.object
+        # context['form'] = CommentForm(request=self.request)
         # self.request.session['last_viewed_articles'] = (self.kwargs['pk'])
         return context
 

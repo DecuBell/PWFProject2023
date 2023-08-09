@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'newsapp.web',
     'newsapp.accounts',
     'newsapp.articles',
+    'newsapp.comments',
 ]
 
 MIDDLEWARE = [
