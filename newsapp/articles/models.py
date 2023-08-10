@@ -3,7 +3,6 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.deconstruct import deconstructible
 
-
 UserModel = get_user_model()
 
 
@@ -20,6 +19,19 @@ class MaxImageSizeValidator:
     @staticmethod
     def __megabytes_to_bytes(value):
         return value * 1024 * 1024
+
+
+def get_sentinel_user():
+    #
+    # profile_data = {
+    #     'first_name': 'John',
+    #     'last_name': 'Doe',
+    #     'profile_description': 'This is a default user profile',
+    #     'profile_picture': 'https://img.freepik.com/free-icon/user_318-804790.jpg'
+    # }
+    # # user = UserModel.objects.create_user_with_profile(email='default@zapital.bg', password='password', profile_data=profile_data)
+
+    return get_user_model().objects.get_or_create(email='default@zapital.bg')[0]
 
 
 class Article(models.Model):
@@ -74,7 +86,7 @@ class Article(models.Model):
 
     user = models.ForeignKey(
         UserModel,
-        on_delete=models.CASCADE,
+        on_delete=models.SET(get_sentinel_user),
     )
 
     def __str__(self):

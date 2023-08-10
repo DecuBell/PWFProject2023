@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
 from django.views import generic as views
 from newsapp.articles.forms import CreateArticleForm, ArticleDeleteForm
@@ -68,10 +68,33 @@ class SingleArticleView(views.DetailView):
 
         context['comments'] = comments
         context['comment_form'] = comment_form
-        # context['article'] = self.object
-        # context['form'] = CommentForm(request=self.request)
-        # self.request.session['last_viewed_articles'] = (self.kwargs['pk'])
+        context['form'] = CommentForm(request=self.request)
         return context
+
+    def post(self, request, *args, **kwargs):
+        article = self.get_object()  # Get the article object
+        comment_form = CommentForm(request.POST, request=request)
+
+        if comment_form.is_valid():
+            comment = comment_form
+            # comment.profile = comment_form.request.user.pk  # Assuming your user profile is linked to the user
+            comment.instance.article_id = article.pk
+            comment.instance.author_id = comment_form.request.user.pk
+            comment.save()
+            return HttpResponseRedirect(reverse('article details', kwargs={'pk': article.pk}))
+
+        # If the form is not valid, re-render the detail view with errors
+        context = self.get_context_data()
+        context['comment_form'] = comment_form
+        return self.render_to_response(context)
+
+    # def form_valid(self, form):
+    #     item = form.save()
+    #     self.pk = item.pk
+    #     return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('article details', kwargs={'pk': self.pk})
 
 
 class EditArticleView(UserPassesTestMixin, LoginRequiredMixin, views.UpdateView):

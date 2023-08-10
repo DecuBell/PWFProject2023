@@ -41,23 +41,29 @@
 
 
                     <div class="pt-5">
-                        <p>Categories: {{ article.category }}{{ article.pk }}</p>
+                        <p>Categories: {{ article.category }}</p>
                     </div>
 
                     <div id="comment-form-container">
                         <div class="pt-5 comment-wrap">
                             <h3 class="mb-5 heading">{{ comment.total }}</h3>
                             <ul class="comment-list">
+                                {% for comment in comments %}
                                 <li class="comment">
                                     <div class="vcard">
-                                        <img src="{{ comment.profile.profile_image }}" alt="Image placeholder">
+                                        <img src="{{ comment.author.profile_picture }}" alt="Image placeholder">
                                     </div>
                                     <div class="comment-body">
-                                        <h3>{{ comment.profile.pk }}</h3>
+                                        {% if request.user.pk == comment.author.pk %}
+                                        <h3>You</h3>
+                                        {% else %}
+                                        <h3>{{ comment.author.email }}</h3>
+                                        {% endif %}
                                         <div class="meta">{{ comment.publish_date }}</div>
-                                        <p>{{ comment.body }}</p>
+                                        <p>{{ comment.comment_body }}</p>
                                     </div>
                                 </li>
+                                {% endfor %}
                             </ul>
                             <!-- END comment-list -->
 
@@ -65,12 +71,8 @@
                                 <h3 class="mb-5">Leave a comment</h3>
                                 <form action="{% url 'article details' article.pk %}" method="POST" class="p-5 bg-light">
                                     {% csrf_token %}
-                                    {{ article.title }} {{ request.user.pk }}
-                                    <input type="hidden" name="article_pk" value="{{ article.pk }}">
-                                    <input type="hidden" name="profile_pk" value="{{ request.user.pk }}">
-                                    <input type="text" name="comment_body" placeholder="Comment here">
-{#                                    <p>{{ form.comment_body.label_tag }}</p>#}
-{#                                    <p>{{ form.comment_body }}</p>#}
+                                    <p>{{ form.comment_body.label_tag }}</p>
+                                    <p >{{ form.comment_body }}</p>
                                     <div class="form-group">
                                         <input type="submit" value="Submit" class="btn btn-primary">
                                     </div>
@@ -78,40 +80,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Include jQuery library -->
-{#                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>#}
-{#                    <!-- Your JavaScript code here -->#}
-{#                    <script>#}
-{#                        // Load the comment form#}
-{#                        $(document).ready(function () {#}
-{#                            $('#comment-form-container').load('{% url "create comment" %}');#}
-{#                            // Handle form submission via AJAX#}
-{#                            $(document).on('submit', '#comment-form', function (e) {#}
-{#                                e.preventDefault();#}
-{#                                let formData = $(this).serializeArray();#}
-{#                                formData.push({name: 'article_pk', value: '{{ article.pk }}'});#}
-{#                                formData.push({name: 'profile_pk', value: '{{ request.user.userprofile.pk }}'});#}
-{##}
-{#                                $.ajax({#}
-{#                                    type: 'POST',#}
-{#                                    url: '{% url "create comment" %}',#}
-{#                                    data: formData,#}
-{#                                    success: function (response) {#}
-{#                                        if (response.success) {#}
-{#                                            // Reload the comment form after successful submission#}
-{#                                            $('#comment-form-container').load('{% url "create comment" %}');#}
-{#                                        } else {#}
-{#                                            // Display form errors#}
-{#                                            console.log(response.errors);#}
-{#                                        }#}
-{#                                    },#}
-{#                                    error: function (xhr, textStatus, errorThrown) {#}
-{#                                        console.log('Error:', errorThrown);#}
-{#                                    }#}
-{#                                });#}
-{#                            });#}
-{#                        });#}
-{#                    </script>#}
                 </div>
 
                 <!-- END main-content -->

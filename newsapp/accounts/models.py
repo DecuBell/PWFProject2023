@@ -2,8 +2,9 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.hashers import make_password
 from django.core import validators
 from django.core.exceptions import ValidationError
-from django.db import models
+from django.db import models, transaction, IntegrityError
 from django.contrib.auth import models as auth_models, get_user_model
+from django.db.models.utils import resolve_callables
 
 
 class UserAuthManager(BaseUserManager):
@@ -33,6 +34,20 @@ class UserAuthManager(BaseUserManager):
             raise ValueError("Superuser must have is_superuser=True.")
 
         return self._create_user(email, password, **extra_fields)
+
+    # def create_user_with_profile(self, email, password, **extra_fields):
+    #     if not email:
+    #         raise ValueError('The Email field must be set')
+    #
+    #     profile_data = extra_fields.pop('profile_data', {})
+    #
+    #     user = self.get(email=email, **extra_fields)
+    #     # user.set_password(password)
+    #     user.save(using=self._db)
+    #
+    #     Profile.objects.create(user=user, **profile_data)
+    #
+    #     return user
 
 
 class UserAuth(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):

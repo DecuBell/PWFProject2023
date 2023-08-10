@@ -22,5 +22,4 @@ urlpatterns = [
     path('', include('newsapp.web.urls')),
     path('account/', include('newsapp.accounts.urls')),
     path('article/', include('newsapp.articles.urls')),
-    # path('comments/', include('newsapp.comments.urls')),
 ]

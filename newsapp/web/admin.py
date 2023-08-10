@@ -1,5 +1,8 @@
 from django.contrib import admin
-from django.contrib.auth import get_user_model
+from newsapp.web.models import Ads
 
-# Register your models here.
-UserModel = get_user_model()
+
+@admin.register(Ads)
+class AdsAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'publish_date', 'expiration_date', )
+    list_filter = ('publish_date', )

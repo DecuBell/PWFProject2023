@@ -1,0 +1,56 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block page_content %}
+
+    <div class="section search-result-wrap">
+        <div class="container">
+        <div class="row posts-entry">
+        <a href="{% url 'ad create' %}" class="btn btn-sm btn-outline-primary">Create New Add</a>
+        </div>
+        <br>
+            <div class="row posts-entry">
+                <div class="col-lg-8">
+                    {% for ad in object_list %}
+                        <div class="blog-entry d-flex blog-entry-search-item">
+                            <div>
+                                <span class="date">{{ ad.publish_date }} &bullet; {{ ad.category }} &bullet; {{ ad.author }}</span>
+                                <h2>{{ ad.title }}</h2>
+                                <p>{{ ad.body }}</p>
+                                <p>{% if request.user.pk == ad.user.pk %}<a href="{% url 'ad edit' ad.pk %}"
+                                                                            class="btn btn-sm btn-outline-primary">Edit</a>
+                                {% endif %}
+                                    {% if request.user.pk == ad.user.pk or is_editor %}
+                                        <a href="{% url 'ad delete' ad.pk %}" class="btn btn-sm btn-outline-primary">Delete</a>
+                                    {% endif %}
+                                </p>
+                                {{ request.user.pk }} {{ ad.user.pk }}
+                            </div>
+                        </div>
+
+                    {% endfor %}
+                    {% if object_list.all|length > 10 %}
+                        <div class="col-md-12" bis_skin_checked="1">
+                            <div class="custom-pagination" bis_skin_checked="1">
+                                {% if page_obj.has_previous %}
+                                    <a href="?page=1">1</a>
+                                    {#                      <a href="?page={{ page_obj.previous_page_number }}">previous</a>#}
+                                {% endif %}
+                                <span class="current">{{ page_obj.number }}</span>
+                                {% if page_obj.has_next %}
+                                    <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.number|add:"1" }}</a>
+
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="sidebar-box">
+                        <h5 class="heading">Ads count: <span>({{ object_list.all | length }})</span></h5>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}

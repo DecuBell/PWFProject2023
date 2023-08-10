@@ -92,7 +92,6 @@ class UserDetailsView(LoginRequiredMixin, views.DetailView):
 
         context['profile_image'] = self.get_profile_image()
         # context['articles'] = self.request.user.article_set.all()
-
         return context
 
 

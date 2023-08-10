@@ -11,7 +11,7 @@
                     {% for article in object_list %}
                         <div class="blog-entry d-flex blog-entry-search-item">
                             <a href="{% url 'article details' article.pk %}" class="img-link me-4">
-                                <img src="{% static '' %}{{ article.header_image }}" alt="Image" class="img-thumbnail">
+                                <img src="{% static article.header_image %}" alt="Image" class="img-thumbnail">
                             </a>
                             <div>
                                 <span class="date">{{ article.publish_date }} &bullet; <a
