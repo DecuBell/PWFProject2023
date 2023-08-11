@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'newsapp.accounts',
     'newsapp.articles',
     'newsapp.comments',
+    'newsapp.readers_signals',
 ]
 
 MIDDLEWARE = [
@@ -81,9 +82,13 @@ WSGI_APPLICATION = 'newsapp.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db_new.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "newsapp_db",
+        "USER": "postgres",
+        "PASSWORD": "Taralej",
+        "HOST": "127.0.0.1",
+        "PORT": "5432",
     }
 }
 

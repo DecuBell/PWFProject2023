@@ -9,11 +9,10 @@
         <div class="container">
             <div class="row mb-4">
                 <div class="col-sm-6">
+                    {% if request.user.is_authenticated %}
+                        <h4>Hello, {{ request.user }}</h4>
+                    {% endif %}
                     <h2 class="posts-entry-title">Latest news:</h2>
-                    {{ request.user }}
-                </div>
-
-                <div class="col-sm-6 text-sm-end"><a href="{% static 'category.html' %}" class="read-more">View All</a>
                 </div>
             </div>
             <div class="row g-3">

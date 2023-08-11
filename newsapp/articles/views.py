@@ -43,12 +43,7 @@ class ArticlesView(views.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['is_editor'] = any([self.request.user.groups.filter(name='Editorial').exists(), self.request.user.is_staff, self.request.user.is_superuser])
-        # context['is_journalist'] = self.request.user.groups.filter(name='Journalist').exists()
-        context['general_crime'] = len(Article.objects.filter(category="General crime"))
-        context['local_news'] = len(Article.objects.filter(category="Local news"))
-        context['good_news'] = len(Article.objects.filter(category="Good news"))
-        context['politics'] = len(Article.objects.filter(category="Politics"))
-        context['street_reporters'] = len(Article.objects.filter(category="Street reporters"))
+        context['can_create'] = any([self.request.user.groups.filter(name='Editorial').exists(), self.request.user.is_staff, self.request.user.is_superuser, self.request.user.groups.filter(name='Journalist').exists()])
 
         return context
 
@@ -61,6 +56,9 @@ class SingleArticleView(views.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['is_author'] = self.object.user == self.request.user
+        context['is_editor'] = any(
+            [self.request.user.groups.filter(name='Editorial').exists(), self.request.user.is_staff,
+             self.request.user.is_superuser])
         context['article_author'] = self.object.user.profile.full_name
         article = self.object
         comments = Comment.objects.filter(article=article)

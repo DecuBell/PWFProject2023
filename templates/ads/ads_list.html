@@ -17,14 +17,16 @@
                                 <span class="date">{{ ad.publish_date }} &bullet; {{ ad.category }} &bullet; {{ ad.author }}</span>
                                 <h2>{{ ad.title }}</h2>
                                 <p>{{ ad.body }}</p>
-                                <p>{% if request.user.pk == ad.user.pk %}<a href="{% url 'ad edit' ad.pk %}"
+                            {% if request.user.is_authenticated %}
+                                <p>{% if request.user.pk == ad.author.pk %}
+                                    <a href="{% url 'ad edit' ad.pk %}"
                                                                             class="btn btn-sm btn-outline-primary">Edit</a>
                                 {% endif %}
-                                    {% if request.user.pk == ad.user.pk or is_editor %}
+                                    {% if request.user.pk == ad.author.pk or is_editor %}
                                         <a href="{% url 'ad delete' ad.pk %}" class="btn btn-sm btn-outline-primary">Delete</a>
                                     {% endif %}
                                 </p>
-                                {{ request.user.pk }} {{ ad.user.pk }}
+                            {% endif %}
                             </div>
                         </div>
 

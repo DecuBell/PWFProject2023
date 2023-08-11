@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponseForbidden
 from django.urls import reverse_lazy, reverse
+from django.utils.datetime_safe import date
 from django.views import generic as views
 from newsapp.articles.models import Article
 from newsapp.web.forms import CreateAdForm, AdDeleteForm
@@ -42,6 +43,12 @@ class AdsListView(views.ListView):
     template_name = 'ads/ads_list.html'
     ordering = ['-publish_date', '-id']
 
+    def get_queryset(self):
+        today = date.today()
+
+        queryset = Ads.objects.filter(expiration_date__gt=today)
+        return queryset
+
 
 class AdEditView(UserPassesTestMixin, LoginRequiredMixin, views.UpdateView):
     model = Ads
@@ -50,7 +57,7 @@ class AdEditView(UserPassesTestMixin, LoginRequiredMixin, views.UpdateView):
 
     def test_func(self):
         ad = self.get_object()
-        return ad.user == self.request.user
+        return ad.author == self.request.user
 
     def handle_no_permission(self):
         return HttpResponseForbidden("You do not have permission to access this page.")
@@ -59,6 +66,11 @@ class AdEditView(UserPassesTestMixin, LoginRequiredMixin, views.UpdateView):
         item = form.save()
         self.pk = item.pk
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['ad'] = self.get_object()  # Pass the ad object to the context
+        return context
 
     def get_success_url(self):
         return reverse('ad edit', kwargs={'pk': self.pk})
@@ -77,7 +89,7 @@ class AdDeleteView(UserPassesTestMixin, LoginRequiredMixin, views.DeleteView):
             self.request.user.groups.filter(name='Editorial').exists(),
             self.request.user.is_staff,
             self.request.user.is_superuser,
-            ad.user == self.request.user
+            ad.author == self.request.user
         ])
 
     def handle_no_permission(self):
@@ -89,6 +101,11 @@ class AdDeleteView(UserPassesTestMixin, LoginRequiredMixin, views.DeleteView):
 
         return super().get_success_url()
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['ad'] = self.get_object()  # Pass the ad object to the context
+        return context
+
     def get_initial(self):
         ad = self.get_object()
         return {'category': ad.category,
@@ -96,3 +113,25 @@ class AdDeleteView(UserPassesTestMixin, LoginRequiredMixin, views.DeleteView):
                 'body': ad.body,
                 'phone_number': ad.phone_number,
                 }
+
+
+class BuyAdsListView(views.ListView):
+    paginate_by = 10
+    model = Ads
+    template_name = 'ads/buy_list.html'
+    ordering = ['-publish_date', '-id']
+
+    def get_queryset(self):
+        queryset = Ads.objects.filter(category='Buy')
+        return queryset
+
+
+class SellAdsListView(views.ListView):
+    paginate_by = 10
+    model = Ads
+    template_name = 'ads/sell_list.html'
+    ordering = ['-publish_date', '-id']
+
+    def get_queryset(self):
+        queryset = Ads.objects.filter(category='Sell')
+        return queryset

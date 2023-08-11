@@ -37,6 +37,13 @@
                         <hr/>
                         <br/>
                         <p>{{ article.body }}</p>
+
+                        {% if request.user.pk == article.user.pk or is_editor %}<a
+                                href="{% url 'article edit' article.pk %}"
+                                class="btn btn-sm btn-outline-primary">Edit</a> <a
+                                href="{% url 'article delete' article.pk %}"
+                                class="btn btn-sm btn-outline-primary">Delete</a>
+                        {% endif %}
                     </div>
 
 
@@ -49,30 +56,31 @@
                             <h3 class="mb-5 heading">{{ comment.total }}</h3>
                             <ul class="comment-list">
                                 {% for comment in comments %}
-                                <li class="comment">
-                                    <div class="vcard">
-                                        <img src="{{ comment.author.profile_picture }}" alt="Image placeholder">
-                                    </div>
-                                    <div class="comment-body">
-                                        {% if request.user.pk == comment.author.pk %}
-                                        <h3>You</h3>
-                                        {% else %}
-                                        <h3>{{ comment.author.email }}</h3>
-                                        {% endif %}
-                                        <div class="meta">{{ comment.publish_date }}</div>
-                                        <p>{{ comment.comment_body }}</p>
-                                    </div>
-                                </li>
+                                    <li class="comment">
+                                        <div class="vcard">
+                                            <img src="{{ comment.author.profile_picture }}" alt="Image placeholder">
+                                        </div>
+                                        <div class="comment-body">
+                                            {% if request.user.pk == comment.author.pk %}
+                                                <h3>You</h3>
+                                            {% else %}
+                                                <h3>{{ comment.author.email }}</h3>
+                                            {% endif %}
+                                            <div class="meta">{{ comment.publish_date }}</div>
+                                            <p>{{ comment.comment_body }}</p>
+                                        </div>
+                                    </li>
                                 {% endfor %}
                             </ul>
                             <!-- END comment-list -->
 
                             <div class="comment-form-wrap pt-5">
                                 <h3 class="mb-5">Leave a comment</h3>
-                                <form action="{% url 'article details' article.pk %}" method="POST" class="p-5 bg-light">
+                                <form action="{% url 'article details' article.pk %}" method="POST"
+                                      class="p-5 bg-light">
                                     {% csrf_token %}
                                     <p>{{ form.comment_body.label_tag }}</p>
-                                    <p >{{ form.comment_body }}</p>
+                                    <p>{{ form.comment_body }}</p>
                                     <div class="form-group">
                                         <input type="submit" value="Submit" class="btn btn-primary">
                                     </div>
@@ -99,80 +107,8 @@
                         </div>
                     </div>
                     <!-- END sidebar-box -->
-                    <div class="sidebar-box">
-                        <h3 class="heading">Popular Posts</h3>
-                        <div class="post-entry-sidebar">
-                            <ul>
-                                <li>
-                                    <a href="">
-                                        <img src="images/img_1_sq.jpg" alt="Image placeholder" class="me-4 rounded">
-                                        <div class="text">
-                                            <h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
-                                            <div class="post-meta">
-                                                <span class="mr-2">March 15, 2018 </span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="">
-                                        <img src="images/img_2_sq.jpg" alt="Image placeholder" class="me-4 rounded">
-                                        <div class="text">
-                                            <h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
-                                            <div class="post-meta">
-                                                <span class="mr-2">March 15, 2018 </span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="">
-                                        <img src="images/img_3_sq.jpg" alt="Image placeholder" class="me-4 rounded">
-                                        <div class="text">
-                                            <h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
-                                            <div class="post-meta">
-                                                <span class="mr-2">March 15, 2018 </span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <!-- END sidebar-box -->
 
-                    <div class="sidebar-box">
-                        <h3 class="heading">Categories</h3>
-                        <ul class="categories">
-                            <li><a href="#">Food <span>(12)</span></a></li>
-                            <li><a href="#">Travel <span>(22)</span></a></li>
-                            <li><a href="#">Lifestyle <span>(37)</span></a></li>
-                            <li><a href="#">Business <span>(42)</span></a></li>
-                            <li><a href="#">Adventure <span>(14)</span></a></li>
-                        </ul>
-                    </div>
-                    <!-- END sidebar-box -->
-
-                    {#          <div class="sidebar-box">#}
-                    {#            <h3 class="heading">Tags</h3>#}
-                    {#            <ul class="tags">#}
-                    {#              <li><a href="#">Travel</a></li>#}
-                    {#              <li><a href="#">Adventure</a></li>#}
-                    {#              <li><a href="#">Food</a></li>#}
-                    {#              <li><a href="#">Lifestyle</a></li>#}
-                    {#              <li><a href="#">Business</a></li>#}
-                    {#              <li><a href="#">Freelancing</a></li>#}
-                    {#              <li><a href="#">Travel</a></li>#}
-                    {#              <li><a href="#">Adventure</a></li>#}
-                    {#              <li><a href="#">Food</a></li>#}
-                    {#              <li><a href="#">Lifestyle</a></li>#}
-                    {#              <li><a href="#">Business</a></li>#}
-                    {#              <li><a href="#">Freelancing</a></li>#}
-                    {#            </ul>#}
-                    {#          </div>#}
                 </div>
-                <!-- END sidebar -->
-
             </div>
         </div>
     </section>
